@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History | Windsor Bookshop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+        }
+        footer {
+            background-color: #212529;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            width: 100%;
+        }
+        .order-history-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            min-width: 200px;
+            padding: 8px 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Show animation when dropdown is active */
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Dropdown Items */
+        .dropdown-menu .dropdown-item {
+            padding: 12px 20px;
+            color: #333;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        /* Special styling for logout */
+        .dropdown-menu .text-danger {
+            color: #e74c3c !important;
+            font-weight: bold;
+        }
+
+        .dropdown-menu .text-danger:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container">
+        <a class="navbar-brand" href="CustomerDashboard.html">📚 Windsor Bookshop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="bookCatalog.html">📖 Books</a></li>
+                <li class="nav-item"><a class="nav-link" href="orderHistory.html">📜 Order History</a></li>
+                <li class="nav-item"><a class="nav-link" href="shoppingCart.html">🛒 Cart <span id="cart-count" class="badge bg-danger">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#book-selection">⭐ Reviews</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profile-btn" role="button">🙎‍♂️</a>
+                    <ul class="dropdown-menu dropdown-menu-end" id="profile-menu">
+                        <li><a class="dropdown-item" href="profile.html">🔑 Change Password</a></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logout-option">🚪 Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Order History Content -->
+<section class="container my-4 main-content">
+    <h2 class="text-center mb-4">📜 Order History</h2>
+
+    <div class="order-history-container">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Book Name</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="order-history-table">
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script src="../js/orderHistory.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>

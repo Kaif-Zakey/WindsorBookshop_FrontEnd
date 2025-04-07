@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Windsor Bookshop</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    html, body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .main-content {
+      flex: 1;
+    }
+    footer {
+      background-color: #212529;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      width: 100%;
+    }
+    .checkout-container {
+      max-width: 600px;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Card UI Styles */
+    .card-ui {
+      background: linear-gradient(145deg, #0d6efd, #6610f2);
+      color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      height: 200px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .card-ui .card-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+    .card-ui .card-details .card-number,
+    .card-ui .card-details .expiry-date,
+    .card-ui .card-details .card-name {
+      font-size: 18px;
+    }
+    .card-ui .card-number {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    .card-ui .card-name {
+      font-size: 18px;
+    }
+    .card-ui .card-logo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    /* Input styles */
+    .card-inputs input {
+      border: 1px solid #ced4da;
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .card-details {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .card-details input {
+      width: 48%;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+  <div class="container">
+    <a class="navbar-brand" href="CustomerDashboard.html">📚 Windsor Bookshop</a>
+  </div>
+</nav>
+
+<section class="container my-4 main-content">
+  <h2 class="text-center mb-4">💳 Secure Checkout</h2>
+
+  <div class="checkout-container mx-auto">
+    <form id="checkout-form">
+      <h5>📌 Customer Information</h5>
+      <div class="mb-3">
+        <label for="fullName" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="fullName" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label">Shipping Address</label>
+        <input type="text" class="form-control" id="address" required>
+      </div>
+
+      <h5>💳 Payment Details</h5>
+
+      <!-- Card UI -->
+      <div class="card-ui">
+        <div class="card-details">
+          <div class="card-number" id="card-number">**** **** **** ****</div>
+          <div class="expiry-date" id="expiry-date">MM/YY</div>
+          <div class="card-name" id="card-name">John Doe</div>
+        </div>
+        <div class="card-logo">
+          💳
+        </div>
+      </div>
+
+      <!-- Card Input Fields -->
+      <div class="card-inputs">
+        <label for="cardNumber" class="form-label">Card Number</label>
+        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+
+        <div class="card-details">
+          <div>
+            <label for="expiryDate" class="form-label">Expiry Date (MM/YY)</label>
+            <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+          </div>
+          <div>
+            <label for="cvv" class="form-label">CVV</label>
+            <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="3" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <h5>🛒 Order Summary</h5>
+        <p>Total Price: <strong>$<span id="total-price">0.00</span></strong></p>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 mt-3">Complete Purchase</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Windsor Bookshop - All Rights Reserved
+</footer>
+
+<!-- JavaScript -->
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/checkout.js"></script>
+
+</body>
+</html>

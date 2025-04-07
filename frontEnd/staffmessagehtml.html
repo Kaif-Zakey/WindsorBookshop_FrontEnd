@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Messages</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        h2 {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2><i class="fa fa-envelope"></i> Customer Messages</h2>
+    <hr>
+    <table class="table table-hover table-bordered mt-3" id="messages-table">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Sender</th>
+            <th>Message</th>
+            <th>Sent At</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- Reply Modal -->
+<div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reply to Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="reply-form">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Customer Email</label>
+                        <input type="email" class="form-control" id="email" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reply-content" class="form-label">Reply Content</label>
+                        <textarea class="form-control" id="reply-content" rows="4" required></textarea>
+                    </div>
+                    <input type="hidden" id="message-id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="send-reply-btn">Send Reply</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            Swal.fire('Not Authorized', 'Please login to access messages.', 'warning').then(() => {
+                window.location.href = "login.html";
+            });
+            return;
+        }
+
+        fetchMessages();
+
+        function fetchMessages() {
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/message/getAllForStaff',
+                method: 'GET',
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json"
+                },
+                success: function (response) {
+                    let html = '';
+                    response.forEach((msg, index) => {
+                        html += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${msg.name}</td>
+                                <td>${msg.content}</td>
+                                <td>${new Date(msg.sentAt).toLocaleString()}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success reply-btn" data-id="${msg.id}"><i class="fas fa-reply"></i> Reply</button>
+                                    <button class="btn btn-sm btn-danger delete-btn" data-id="${msg.id}"><i class="fas fa-trash-alt"></i> Delete</button>
+                                </td>
+                            </tr>`;
+                    });
+                    $('#messages-table tbody').html(html);
+                },
+                error: () => Swal.fire('Error', 'Failed to fetch messages.', 'error')
+            });
+        }
+
+        // Reply button handler with email fetch
+        $(document).on('click', '.reply-btn', function () {
+            const id = $(this).data('id');
+            $('#message-id').val(id);
+            $('#reply-content').val('');
+            $('#name').val('');
+
+            $.ajax({
+                url: `http://localhost:8080/api/v1/message/getEmailByMessageId/${id}`,
+                method: 'GET',
+                headers: {
+                    Authorization: "Bearer " + token
+                },
+                success: function (response) {
+                    $('#email').val(response.email);
+                    $('#replyModal').modal('show');
+                },
+                error: function () {
+                    Swal.fire('Error', 'Failed to fetch email address.', 'error');
+                }
+            });
+        });
+
+        // Send Reply
+        $('#send-reply-btn').click(function () {
+            const content = $('#reply-content').val();
+            const toEmail = $('#email').val();
+
+            if (!content || !toEmail) {
+                Swal.fire('Missing Info', 'Please enter reply content and ensure email is loaded.', 'info');
+                return;
+            }
+
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/message/sendReplyEmail',
+                method: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    Authorization: "Bearer " + token
+                },
+                data: JSON.stringify({
+                    to: toEmail,
+                    subject: "Reply to your message",
+                    body: content
+                }),
+                success: function () {
+                    Swal.fire('Sent!', 'Email sent successfully!', 'success');
+                    $('#replyModal').modal('hide');
+                    fetchMessages();
+                },
+                error: function () {
+                    Swal.fire('Error', 'Failed to send email.', 'error');
+                }
+            });
+        });
+
+        // Delete with SweetAlert
+        $(document).on('click', '.delete-btn', function () {
+            const messageId = $(this).data('id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This message will be permanently deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `http://localhost:8080/api/v1/message/deleteMessage/${messageId}`,
+                        method: 'DELETE',
+                        headers: {
+                            Authorization: "Bearer " + token
+                        },
+                        success: function () {
+                            Swal.fire('Deleted!', 'The message has been deleted.', 'success');
+                            fetchMessages();
+                        },
+                        error: function () {
+                            Swal.fire('Error!', 'Could not delete the message.', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

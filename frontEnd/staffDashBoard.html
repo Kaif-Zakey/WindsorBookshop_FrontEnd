@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - Windsor Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* General Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #343a40;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-nav .nav-link {
+            color: #fff;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        /* Section Title */
+        .section-title {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #343a40;
+            border-bottom: 3px solid #007bff;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        /* Tables */
+        .table-hover tbody tr:hover {
+            background-color: #e9ecef;
+            transition: background 0.3s ease-in-out;
+        }
+        .table th {
+            background-color: #007bff;
+            color: white;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .dashboard-card {
+            width: 23%;
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+        .dashboard-card:hover {
+            transform: scale(1.05);
+        }
+        .dashboard-card h5 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .dashboard-card p {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        /* Buttons */
+        .btn-info, .btn-primary {
+            background-color: #007bff;
+            font-weight: 600;
+            border: none;
+            transition: background 0.3s ease-in-out;
+        }
+        .btn-info:hover, .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #28a745;
+            font-weight: 600;
+            border: none;
+            transition: background 0.3s ease-in-out;
+        }
+        .btn-secondary:hover {
+            background-color: #218838;
+        }
+
+        /* Modal */
+        .modal-content {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* Review Management Table */
+        #review-management table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #review-management td, #review-management th {
+            padding: 12px;
+            text-align: left;
+        }
+        #review-management th {
+            background-color: #343a40;
+            color: white;
+            text-transform: uppercase;
+        }
+        #review-management tr:hover {
+            background-color: #e9ecef;
+            transition: background 0.3s ease-in-out;
+        }
+        #review-management button {
+            margin-right: 5px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card, .dashboard-card, .table, .navbar {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">📚 Windsor Bookshop</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" onclick="showSection('staff-dashboard')"><i class="fa fa-tachometer"></i> Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('category-management')"> <i class="fa fa-calendar"></i>Category </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('book-management')"><i class="fa fa-book"></i> Manage Books</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('author-management')"><i class="fa fa-user"></i> Manage Authors</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="staffOrderManage.html" ><i class="fa fa-cogs"></i> Order Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html" onclick="logout()" id="logout-btn"><i class="fa fa-sign-out"></i> Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="staffmessagehtml.html">
+                        <i class="fa fa-envelope"></i>
+                        <span id="message-count" class="badge bg-danger">0</span> <!-- Message count -->
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div id="staff-dashboard">
+        <h2 class="section-title">📊 Staff Dashboard</h2>
+        <div class="dashboard-stats">
+            <div class="dashboard-card">
+                <h5>Total Books</h5>
+                <p id="total-books">0</p>
+            </div>
+            <div class="dashboard-card">
+                <h5>Total Orders</h5>
+                <p id="total-orders">0</p>
+            </div>
+            <div class="dashboard-card">
+                <h5>Total Authors</h5>
+                <p id="total-authors">0</p>
+            </div>
+            <div class="dashboard-card">
+                <h5>Pending Orders</h5>
+                <p id="pending-orders">0</p>
+            </div>
+        </div>
+
+        <h3>Recent Activities</h3>
+        <div class="card p-3 mb-4">
+            <div id="review-management" style="">
+                <h2 class="section-title">📑 Pending Reviews</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Review ID</th>
+                        <th>Book Title</th>
+                        <th>User</th>
+                        <th>Rating</th>
+                        <th>Comment</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="review-table-body">
+                    <!-- Reviews will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <ul id="recent-activities">
+            </ul>
+        </div>
+    </div>
+
+<!--    book management-->
+    <div id="book-management" style="display: none;">
+        <h2 class="section-title">📖 Manage Books</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" id="search-books" class="form-control search-bar" placeholder="🔍 Search Books">
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBookModal"><i class="fa fa-plus"></i> Add New Book</button>
+            </div>
+        </div>
+        <h5>Book List</h5>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>id</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="book-table-body">
+            </tbody>
+        </table>
+    </div>
+
+<!--catagory management-->
+    <div id="category-management" style="display: none;">
+        <h2 class="section-title">📱 Manage Category</h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" id="search-category" class="form-control search-bar" placeholder="🔍 Search Category">
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModel"><i class="fa fa-plus"></i> Add New Category</button>
+            </div>
+        </div>
+        <h5>Category List</h5>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="category-table-body">
+            </tbody>
+        </table>
+    </div>
+
+<!--    author management-->
+    <div id="author-management" style="display: none;">
+        <h2 class="section-title">🖊️ Manage Authors</h2>
+        <div class="card p-3 mb-4">
+            <h5>Add New Author</h5>
+            <form id="add-author-form">
+                <div class="mb-3">
+                    <label for="author-name" class="form-label">Author Name</label>
+                    <input type="text" class="form-control" id="author-name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="author-bio" class="form-label">Author Bio</label>
+                    <input class="form-control" id="author-bio" required>
+                </div>
+                <div class="mb-3">
+                    <label for="author-country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="author-country" required>
+                </div>
+                <button type="submit" id="saveAuthor-btn" class="btn btn-primary">Add Author</button>
+            </form>
+        </div>
+        <h5>Author List</h5>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>id</th>
+                <th>Name</th>
+                <th>Bio</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="author-table-body">
+
+            </tbody>
+        </table>
+    </div>
+
+<!--    Order Management-->
+    <div id="order-management" style="display: none;">
+        <h2 class="section-title">📦 Order Management</h2>
+        <div class="card p-3">
+            <h5>Orders List</h5>
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Details</th>
+                </tr>
+                </thead>
+                <tbody id="order-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Book Modal -->
+<div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBookModalLabel">Add New Book</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-book-form" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="book-title" class="form-label">Book Title</label>
+                        <input type="text" class="form-control" id="book-title" name="title" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="book-author" class="form-label">Author</label>
+                        <select class="form-select" id="book-author" name="authorId" required>
+                            <option value="" disabled selected>Select Author</option>
+                            <!-- Author options will be dynamically inserted here -->
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="book-category" class="form-label">Category</label>
+                        <select class="form-select" id="book-category" name="categoryId" required>
+                            <option value="" disabled selected>Select Category</option>
+                            <!-- Category options will be dynamically inserted here -->
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="book-price" class="form-label">Price</label>
+                        <input type="number" class="form-control" name="price" id="book-price" required min="0">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="book-quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" name="quantity" id="book-quantity" required min="1">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="book-image" class="form-label">Book Image</label>
+                        <input type="file"  class="form-control" id="book-image" accept="image/*" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add Book</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Book Modal -->
+<div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBookModalLabel">Edit Book</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-book-form">
+                    <div class="mb-3">
+                        <label for="edit-book-id" class="form-label">Id</label>
+                        <input type="text" id="edit-book-id" class="form-control" readonly>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="edit-book-title" class="form-label">Title</label>
+                        <input type="text" id="edit-book-title" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-book-author" class="form-label">Author</label>
+                        <select id="edit-book-author" class="form-control">
+                            <!-- Populate this with authors -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-book-category" class="form-label">Category</label>
+                        <select id="edit-book-category" class="form-control">
+                            <!-- Populate this with categories -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-book-price" class="form-label">Price</label>
+                        <input type="number" id="edit-book-price" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-book-quantity" class="form-label">Quantity</label>
+                        <input type="number" id="edit-book-quantity" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-book-image" class="form-label">Book Image</label>
+                        <input type="file" id="edit-book-image" class="form-control">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="updateBook()">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for adding category -->
+<div class="modal fade" id="addCategoryModel" tabindex="-1" aria-labelledby="addCategoryModelLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModelLabel">Add New Book</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="add-category-form" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="category-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="category-name" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for editing author -->
+<div class="modal fade" id="edit-author-modal" tabindex="-1" role="dialog" aria-labelledby="editAuthorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAuthorModalLabel">Edit Author</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-author-form">
+                    <input type="hidden" id="edit-author-id" name="id">
+                    <div class="form-group">
+                        <label for="edit-author-name">Name</label>
+                        <input type="text" class="form-control" id="edit-author-name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-author-bio">Bio</label>
+                        <textarea class="form-control" id="edit-author-bio" name="bio" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-author-country">Country</label>
+                        <input type="text" class="form-control" id="edit-author-country" name="country" required>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-category-form">
+                    <input type="hidden" id="edit-category-id"> <!-- Hidden field to store category ID -->
+
+                    <div class="mb-3">
+                        <label for="edit-category-name" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="edit-category-name" placeholder="Enter category name" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/staffDashboard.js"></script>
+<script>
+    function logout() {
+        // Clear localStorage
+        localStorage.clear();
+
+        // Optionally clear sessionStorage too
+        sessionStorage.clear();
+
+        // Redirect to login or homepage
+        window.location.href = "index.html";
+    }
+</script>
+
+
+
+</body>
+</html>

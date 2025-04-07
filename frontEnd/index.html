@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login | Windsor Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            max-width: 400px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.5);
+            color: black;
+            border: 1px solid white;
+        }
+        .btn-primary {
+            background: #ff7eb3;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background: #ff4f8b;
+        }
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h3 class="mb-4">🔑 Welcome Back</h3>
+    <form id="login-form">
+        <div class="mb-3">
+            <input type="email" class="form-control" id="login-email" placeholder="📧 Enter email" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" id="login-password" placeholder="🔒 Enter password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <p class="mt-3">
+        <a href="passwordForget.html" class="text-white fw-bold">Forgot Password?</a>
+    </p>
+    <p class="mt-2">
+        Don't have an account? <a href="register.html" class="text-white fw-bold">Register</a>
+    </p>
+</div>
+
+<script>
+    const API_BASE_URL = "http://localhost:8080/api/v1/auth";
+
+    document.getElementById("login-form")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+        const loginButton = e.target.querySelector("button");
+        loginButton.classList.add("loading");
+        loginButton.innerHTML = "🔄 Logging in...";
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/authenticate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (!result || !result.token || !result.userId || !result.role) {
+                    Swal.fire("⚠️ Error", "Invalid user data received.", "error");
+                    return;
+                }
+
+                localStorage.setItem("token", result.token);
+                localStorage.setItem("id", result.userId);
+                localStorage.setItem("userRole", result.role);
+
+                const userRole = result.role.toUpperCase();
+
+                Swal.fire({
+                    title: "🎉 Login Successful!",
+                    text: `Welcome back, ${userRole}!`,
+                    icon: "success",
+                    confirmButtonText: "Proceed"
+                }).then(() => {
+                    if (userRole === "ADMIN") {
+                        window.location.href = "adminDashboard.html";
+                    } else if (userRole === "STAFF") {
+                        window.location.href = "staffDashboard.html";
+                    } else {
+                        window.location.href = "customerDashboard.html";
+                    }
+                });
+
+            } else {
+                if (result.message?.toLowerCase().includes("verify")) {
+                    Swal.fire({
+                        title: "⚠️ Email Not Verified",
+                        text: "Would you like us to resend the verification code?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Resend Code",
+                        cancelButtonText: "Cancel"
+                    }).then(async (choice) => {
+                        if (choice.isConfirmed) {
+                            try {
+                                const resendResponse = await fetch(`${API_BASE_URL}/resend-verification?email=${encodeURIComponent(email)}`, {
+                                    method: "POST"
+                                });
+                                if (resendResponse.ok) {
+                                    Swal.fire("📬 Verification Code Sent", "Check your inbox.", "info");
+                                } else {
+                                    Swal.fire("❌ Failed", "Could not resend verification code.", "error");
+                                }
+                            } catch (err) {
+                                console.error(err);
+                                Swal.fire("Error", "Something went wrong. Try again later.", "error");
+                            }
+                        }
+                    });
+                } else {
+                    Swal.fire("Error!", result.message || "Invalid email or password", "error");
+                }
+            }
+
+        } catch (error) {
+            console.error("Login Error:", error);
+            Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+        }
+
+        loginButton.classList.remove("loading");
+        loginButton.innerHTML = "Login";
+    });
+</script>
+
+</body>
+</html>

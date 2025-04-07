@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windsor Bookshop - Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+
+    <style>
+
+        body {
+            background-color: #eff3f6;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+        }
+
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000; /* Ensures it stays on top of other elements */
+            background-color: #343a40;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /*background-color: #343a40;*/
+            /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/
+
+        }
+
+        .navbar-brand {
+            font-family: 'Great Vibes', cursive;
+            font-size: 28px; /* Adjust size */
+            font-weight: bold;
+            color: #f4f3ef !important; /* Stylish gold color */
+            text-shadow: 2px 2px 4px rgba(202, 202, 90, 0.11); /* Elegant shadow */
+            letter-spacing: 1px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .navbar-brand:hover {
+            color: #ffdd57 !important; /* Lighter gold on hover */
+            transform: scale(1.05);
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #007bff;
+            transform: scale(1.05);
+        }
+
+
+        header.hero {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 36px; /* To avoid overlap with fixed navbar */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        header.hero h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        header.hero p {
+            font-size: 1.2rem;
+        }
+
+
+        #search-input {
+            border-radius: 20px;
+            padding-left: 30px;
+        }
+
+        #category-filter {
+            border-radius: 20px;
+        }
+
+
+        #books-list .col-md-4 {
+            margin-bottom: 20px;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #555;
+        }
+
+
+        .footer {
+            background-color: #212529;
+            color: white;
+            padding: 30px 0;
+            font-size: 14px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .footer-logo h4 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffc107;
+        }
+
+        .footer-links {
+            font-size: 14px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffc107;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .social-icons a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #343a40;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background: #4adef1;
+            color: #212529;
+            transform: scale(1.1);
+        }
+
+        .footer-text {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: #ccc;
+            transition: color 0.3s;
+        }
+
+        .star:hover {
+            color: #f3e393;
+        }
+
+        .star.selected {
+            color: darkgoldenrod;
+        }
+
+        #reviews-list {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .review {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .review:last-child {
+            border-bottom: none;
+        }
+
+
+        .btn-primary {
+            background-color: #007bff;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+
+        input[type="text"], select {
+            border-radius: 20px;
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card, .navbar, footer, .hero, .table {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /*fdfdfdfdfdf*/
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            min-width: 200px;
+            padding: 8px 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Show animation when dropdown is active */
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Dropdown Items */
+        .dropdown-menu .dropdown-item {
+            padding: 12px 20px;
+            color: #333;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        /* Special styling for logout */
+        .dropdown-menu .text-danger {
+            color: #e74c3c !important;
+            font-weight: bold;
+        }
+
+        .dropdown-menu .text-danger:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+    <div class="container">
+        <a class="navbar-brand" href="CustomerDashboard.html">Windsor Bookshop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="bookCatalog.html">📖 Books</a></li>
+                <li class="nav-item"><a class="nav-link" href="orderHistory.html">📜 Order History</a></li>
+                <li class="nav-item"><a class="nav-link" href="shoppingCart.html">🛒 Cart <span id="cart-count" class="badge bg-danger">0</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="#book-selection">⭐ Reviews</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profile-btn" role="button">🙎‍♂️</a>
+                    <ul class="dropdown-menu dropdown-menu-end" id="profile-menu">
+                        <li><a class="dropdown-item" href="profile.html">🔑 Change Password</a></li>
+                        <li><a class="dropdown-item text-danger" href="#" id="logout-option">🚪 Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="hero bg-primary text-white text-center py-5">
+    <h1>Find Your Next Favorite Book</h1>
+    <p class="lead">Explore our vast collection and enjoy seamless shopping</p>
+    <a href="#featured-books" class="btn btn-light mt-3">Browse Books</a>
+</header>
+
+<!-- Search and Filter Section -->
+<section class="container my-4">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="text" id="search-input" class="form-control" placeholder="🔍 Search books...">
+        </div>
+        <div class="col-md-6">
+            <select id="category-filter" class="form-select">
+                <option value="">📂 All Categories</option>
+                <option value="Fiction">📚 Fiction</option>
+                <option value="Non-Fiction">📖 Non-Fiction</option>
+                <option value="Science">🔬 Science</option>
+                <option value="Technology">💻 Technology</option>
+            </select>
+        </div>
+    </div>
+</section>
+
+<section class="container my-4 main-content" id="featured-books">
+    <h2 class="text-center mb-4">📌 Featured Books</h2>
+    <div class="row" id="books-list">
+    </div>
+</section>
+
+<!-- Reviews Section with Select Book Dropdown -->
+<section class="container my-5" id="reviews-section">
+    <h2 class="text-center">⭐ Your Review</h2>
+
+    <!-- Book Selection -->
+    <div class="mb-3" id="book-selection">
+        <label for="book-select" class="form-label">Select Book</label>
+        <select id="book-select" class="form-select">
+            <option value="">📚 Select a Book</option>
+        </select>
+    </div>
+
+    <!-- Review Form -->
+    <form id="review-form">
+        <div class="mb-3">
+            <label for="reviewText" class="form-label">Write Your Review</label>
+            <textarea class="form-control" id="reviewText" rows="4" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="star-rating" class="form-label">Rating</label>
+            <div class="star-rating" id="star-rating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+
+    <!-- Reviews List -->
+    <h3 class="text-center my-4">Customer Reviews</h3>
+    <div id="reviews-list">
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h4>📚 Windsor Bookshop</h4>
+            </div>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a> |
+                <a href="terms.html">Terms of Service</a> |
+                <a href="contact.html">Contact Us</a>
+            </div>
+            <div class="social-icons">
+                <a href="" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="mailto:kaifzakey47@gmail.com">
+                    <i class="fas fa-envelope"></i>
+                </a>
+
+                <a href="https://wa.me/0716677778" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+            <p class="footer-text">&copy; 2025 Windsor Bookshop - All Rights Reserved</p>
+        </div>
+    </div>
+</footer>
+
+
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/customerDashboard.js"></script>
+<script>
+    $(document).ready(function () {
+        const token = localStorage.getItem("token");
+        const userId = localStorage.getItem("id");
+
+        if (!token) {
+            Swal.fire({
+                title: "Session Expired!",
+                text: "Please log in again.",
+                icon: "warning",
+                confirmButtonColor: "#d33",
+                confirmButtonText: "OK"
+            }).then(() => {
+                window.location.href = "login.html";
+            });
+            return;
+        }
+
+
+
+        loadApprovedReviews();
+
+        if (!token) {
+            Swal.fire({
+                title: "Session Expired!",
+                text: "Please log in again.",
+                icon: "warning",
+                confirmButtonColor: "#d33",
+                confirmButtonText: "OK"
+            }).then(() => {
+                window.location.href = "login.html";
+            });
+            return;
+        }
+
+        const bookSelect = $("#book-select");
+
+        // Load books for the dropdown
+        function loadBooks() {
+            $.ajax({
+                url: "http://localhost:8080/api/v1/books",
+                type: "GET",
+                headers: { Authorization: "Bearer " + token },
+                success: function (data) {
+                    bookSelect.empty().append('<option value="">📚 Select a Book</option>');
+
+                    data.forEach(book => {
+                        bookSelect.append(`<option value="${book.id}">${book.title}</option>`);
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to load books. Please try again later.",
+                        icon: "error",
+                        confirmButtonColor: "#d33"
+                    });
+                }
+            });
+        }
+
+        loadBooks(); // Load books on page load
+
+        let selectedRating = 0;
+        let selectedBookId = null;
+
+
+        $(".star").click(function () {
+            selectedRating = $(this).data("value");
+            $(".star").css("color", "gray");
+            $(this).prevAll().addBack().css("color", "gold");
+        });
+
+
+        $("#review-form").submit(function (event) {
+            event.preventDefault();
+
+            selectedBookId = $("#book-select").val();
+
+            if (!selectedBookId) {
+                Swal.fire({
+                    title: "Select a Book",
+                    text: "Please choose a book before submitting a review.",
+                    icon: "warning",
+                    confirmButtonColor: "#3085d6"
+                });
+                return;
+            }
+
+            if (selectedRating === 0) {
+                Swal.fire({
+                    title: "Select a Rating",
+                    text: "Please select a star rating before submitting.",
+                    icon: "warning",
+                    confirmButtonColor: "#3085d6"
+                });
+                return;
+            }
+
+            const reviewData = {
+                book: { id: selectedBookId },
+                rating: selectedRating,
+                comment: $("#reviewText").val(),
+                user: { id: userId }
+            };
+
+
+            $.ajax({
+                url: "http://localhost:8080/api/v1/reviews/submit",
+                type: "POST",
+                contentType: "application/json",
+                headers: { Authorization: "Bearer " + token },
+                data: JSON.stringify(reviewData),
+                success: function () {
+                    Swal.fire({
+                        title: "Review Submitted!",
+                        text: "Your review has been successfully submitted.",
+                        icon: "success",
+                        confirmButtonColor: "#28a745",
+                        timer: 2000
+                    });
+
+                    $("#reviewText").val("");
+                    selectedRating = 0;
+                    $(".star").css("color", "gray");
+                    loadApprovedReviews();
+                },
+                error: function () {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to submit the review. Please try again.",
+                        icon: "error",
+                        confirmButtonColor: "#d33"
+                    });
+                }
+            });
+        });
+
+        function loadApprovedReviews() {
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/reviews/approved',
+                method: 'GET',
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                success: function (reviews) {
+                    $("#reviews-list").empty();
+                    if (reviews.length === 0) {
+                        $("#reviews-list").html("<p class='text-muted'>No reviews yet. Be the first to review!</p>");
+                    } else {
+                        reviews.forEach(review => {
+                            $("#reviews-list").append(`
+                                <div class="card my-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">⭐ ${review.rating}/5</h5>
+                                        <p class="card-text" style="color: #0f5132; font-weight: bolder">Book: ${review.bookTitle}</p>
+                                        <p class="card-text">${review.comment}</p>
+                                        <small class="text-muted">By ${review.userName || "Anonymous"} on ${new Date(review.date).toLocaleDateString()}</small>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error('Error fetching approved reviews:', error);
+                }
+            });
+        }
+    });
+</script>
+
+
+</body>
+</html>

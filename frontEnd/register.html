@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Register | Windsor Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-container {
+            max-width: 400px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+        }
+        .form-control, .form-select {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.5);
+            color: black;
+            border: 1px solid white;
+        }
+        .btn-success {
+            background: #ff7eb3;
+            border: none;
+            transition: 0.3s;
+        }
+        .btn-success:hover {
+            background: #ff4f8b;
+        }
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <h3 class="mb-3">📝 Create Account</h3>
+    <form id="register-form">
+        <div class="mb-3">
+            <input type="text" id="register-firstname" class="form-control" placeholder="👤 First Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="text" id="register-lastname" class="form-control" placeholder="👤 Last Name" required>
+        </div>
+        <div class="mb-3">
+            <input type="email" id="register-email" class="form-control" placeholder="📧 Email" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" id="register-password" class="form-control" placeholder="🔒 Password" required>
+        </div>
+        <div class="mb-3">
+            <select id="register-role" class="form-select">
+                <option value="USER">👥 USER</option>
+                <option value="ADMIN">🛠️ ADMIN</option>
+                <option value="STAFF">📦 STAFF</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Register</button>
+    </form>
+    <p class="mt-3">
+        Already have an account? <a href="index.html" class="text-white fw-bold">Login</a>
+    </p>
+</div>
+
+<script>
+    const API_BASE_URL = "http://localhost:8080/api/v1/auth";
+
+    // Handle form submission
+    $("#register-form").on("submit", function(e) {
+        e.preventDefault();
+
+        const firstname = $("#register-firstname").val();
+        const lastname = $("#register-lastname").val();
+        const email = $("#register-email").val();
+        const password = $("#register-password").val();
+        const role = $("#register-role").val();
+        const registerButton = e.target.querySelector("button");
+
+        registerButton.classList.add("loading");
+        registerButton.innerHTML = "🔄 Sending Code...";
+
+        // Step 1: Send registration data → server sends verification code
+        $.ajax({
+            url: `${API_BASE_URL}/register`,
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ firstname, lastname, email, password, role }),
+            success: function(result) {
+                // Step 2: Prompt user to enter the verification code
+                Swal.fire({
+                    title: "📩 Enter Verification Code",
+                    text: "A code was sent to your email. Please enter it to complete registration.",
+                    input: "text",
+                    inputLabel: "Verification Code",
+                    inputPlaceholder: "Enter the code",
+                    showCancelButton: true,
+                    confirmButtonText: "Verify",
+                    inputValidator: (value) => {
+                        if (!value) return "You must enter a code!";
+                    }
+                }).then((result) => {
+                    const code = result.value;
+
+                    if (code) {
+                        // Step 3: Send code to verify user
+                        $.ajax({
+                            url: `${API_BASE_URL}/verify`,
+                            method: "POST",
+                            data: { email, code },
+                            success: function(response) {
+                                if (response.message === "Invalid verification code.") {
+                                    Swal.fire({
+                                        title: "❌ Invalid Code",
+                                        text: response.message,
+                                        icon: "error",
+                                        confirmButtonText: "Try Again"
+                                    }).then(() => {
+                                        window.location.href = "index.html"; // Redirect or display error
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: "✅ Email Verified!",
+                                        text: "You can now log in.",
+                                        icon: "success",
+                                        confirmButtonText: "Go to Login"
+                                    }).then(() => {
+                                        window.location.href = "index.html";
+                                    });
+                                }
+                            },
+                            error: function(error) {
+                                Swal.fire("❌ Invalid Code", "The verification code is incorrect.", "error");
+                            }
+                        });
+                    } else {
+                        // If the user doesn't enter a code, delete unverified user
+                        Swal.fire("❌ Verification Failed", "You did not enter a code.", "error");
+
+                        // Delete unverified user via AJAX
+                        $.ajax({
+                            url: `${API_BASE_URL}/unverified`,
+                            method: "DELETE",
+                            data: { email },
+                            success: function(response) {
+                                console.log(response);
+                            },
+                            error: function(error) {
+                                console.error(error);
+                            }
+                        });
+                    }
+                });
+            },
+            error: function(error) {
+                Swal.fire("❌ Registration Failed", error.responseJSON.message || "Could not start registration", "error");
+            },
+            complete: function() {
+                registerButton.classList.remove("loading");
+                registerButton.innerHTML = "Register";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Catalog | Windsor Bookshop</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+
+    body {
+      overflow-x: hidden;
+      padding-top: 70px;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    footer {
+      background-color: #212529;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: #343a40;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar-nav .nav-link {
+      /*color: #fff;*/
+      font-weight: 500;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #ffc107;
+      text-decoration: underline;
+    }
+
+    /* Search and Filters */
+    #search-input, #category-filter, #sort-filter {
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    #search-input:focus, #category-filter:focus, #sort-filter:focus {
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+      border-color: #007bff;
+    }
+
+    #search-input {
+      padding-left: 30px;
+    }
+
+    /* Book Catalog */
+    #books-list .col-md-4 {
+      margin-bottom: 20px;
+    }
+
+    .card {
+      margin-bottom: 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+      background-color: white;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .card-text {
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .card-footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #ddd;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .card-footer a {
+      color: #007bff;
+      font-weight: 600;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .card-footer a:hover {
+      color: #0056b3;
+    }
+
+    /* Category & Sort Filters */
+    select {
+      border-radius: 20px;
+      padding: 10px;
+      background-color: #f1f1f1;
+      transition: all 0.3s ease;
+    }
+
+    select:focus {
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+      border-color: #007bff;
+    }
+
+    /* Footer */
+    footer {
+      font-size: 14px;
+      background-color: #212529;
+      color: white;
+      padding: 15px 0;
+    }
+
+    /* Hover Effects */
+    .navbar-nav .nav-item:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    body, .navbar, .card, footer {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      overflow: hidden;
+      min-width: 200px;
+      padding: 8px 0;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Show animation when dropdown is active */
+    .dropdown-menu.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Dropdown Items */
+    .dropdown-menu .dropdown-item {
+      padding: 12px 20px;
+      color: #333;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .dropdown-menu .dropdown-item:hover {
+      background: #f0f0f0;
+      transform: translateX(5px);
+    }
+
+    /* Special styling for logout */
+    .dropdown-menu .text-danger {
+      color: #e74c3c !important;
+      font-weight: bold;
+    }
+
+    .dropdown-menu .text-danger:hover {
+      background: rgba(231, 76, 60, 0.1);
+    }
+
+
+  </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+  <div class="container">
+    <a class="navbar-brand" href="CustomerDashboard.html">📚 Windsor Bookshop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="bookCatalog.html">📖 Books</a></li>
+        <li class="nav-item"><a class="nav-link" href="orderHistory.html">📜 Order History</a></li>
+        <li class="nav-item"><a class="nav-link" href="shoppingCart.html">🛒 Cart <span id="cart-count" class="badge bg-danger">0</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="CustomerDashboard.html#book-selection">⭐ Reviews</a></li>
+        <li class="nav-item dropdown profileBtn">
+          <a class="nav-link dropdown-toggle" href="#" id="profile-btn" role="button">🙎‍♂️</a>
+          <ul class="dropdown-menu dropdown-menu-end" id="profile-menu">
+            <li><a class="dropdown-item" href="profile.html">🔑 Change Password</a></li>
+            <li><a class="dropdown-item text-danger" href="#" id="logout-option">🚪 Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="container my-4">
+  <h2 class="text-center mb-4">📖 Explore Our Book Collection</h2>
+
+  <div class="row">
+    <div class="col-md-4">
+      <input type="text" id="search-input" class="form-control" placeholder="🔍 Search books..."  >
+    </div>
+    <div class="col-md-3">
+      <select id="category-filter" class="form-select">
+        <option value="">📂 All Categories</option>
+        <option value="Fiction">📚 Fiction</option>
+        <option value="Non-Fiction">📖 Non-Fiction</option>
+        <option value="Science">🔬 Science</option>
+        <option value="Technology">💻 Technology</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select id="sort-filter" class="form-select">
+        <option value="default">Sort By</option>
+        <option value="price-low">💲 Price: Low to High</option>
+        <option value="price-high">💲 Price: High to Low</option>
+        <option value="title">🔠 Title: A-Z</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- Book Catalog -->
+<section class="container my-4 main-content">
+  <div class="row" id="books-list">
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Windsor Bookshop - All Rights Reserved
+</footer>
+
+
+<script src="../js/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/bookCatalog.js"></script>
+
+</body>
+</html>
