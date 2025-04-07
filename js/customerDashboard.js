@@ -41,7 +41,7 @@ $(document).ready(() => {
                 if (result.isConfirmed) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("id");
-                    window.location.href = "login.html";
+                    window.location.href = "../../front/index.html";
                 }
             });
         });

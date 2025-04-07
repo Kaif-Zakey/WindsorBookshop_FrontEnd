@@ -68,7 +68,7 @@
         <a href="passwordForget.html" class="text-white fw-bold">Forgot Password?</a>
     </p>
     <p class="mt-2">
-        Don't have an account? <a href="register.html" class="text-white fw-bold">Register</a>
+        Don't have an account? <a href="frontEnd/register.html" class="text-white fw-bold">Register</a>
     </p>
 </div>
 
@@ -111,11 +111,11 @@
                     confirmButtonText: "Proceed"
                 }).then(() => {
                     if (userRole === "ADMIN") {
-                        window.location.href = "adminDashboard.html";
+                        window.location.href = "../front/frontEnd/adminDashboard.html";
                     } else if (userRole === "STAFF") {
-                        window.location.href = "staffDashboard.html";
+                        window.location.href = "../front/frontEnd/staffDashBoard.html";
                     } else {
-                        window.location.href = "customerDashboard.html";
+                        window.location.href = "../front/frontEnd/CustomerDashboard.html";
                     }
                 });
 
