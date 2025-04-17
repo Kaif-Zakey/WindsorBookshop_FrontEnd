@@ -6,70 +6,232 @@
     <title>Login | Windsor Bookshop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(to right, #667eea, #764ba2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .background {
+            background-image: url('/assets/newbook.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
         .login-container {
-            max-width: 400px;
+            width: 350px;
             padding: 30px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            color: white;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+            margin-right: 8%;
+        }
+
+        .login-logo {
             text-align: center;
+            margin-bottom: 20px;
         }
+
+        .login-logo h2 {
+            color: #333;
+            font-weight: 700;
+            font-size: 22px;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .login-logo p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 0;
+        }
+
         .form-control {
-            background: rgba(255, 255, 255, 0.3);
-            border: none;
-            color: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px 12px;
+            height: auto;
+            font-size: 14px;
         }
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
+
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.5);
-            color: black;
-            border: 1px solid white;
+            border-color: #7c4dff;
+            box-shadow: 0 0 0 0.2rem rgba(124, 77, 255, 0.25);
         }
-        .btn-primary {
-            background: #ff7eb3;
+
+        .btn-login {
+            background: #7c4dff;
+            color: white;
             border: none;
-            transition: 0.3s;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            width: 100%;
+            margin-top: 8px;
+            transition: all 0.3s ease;
         }
-        .btn-primary:hover {
-            background: #ff4f8b;
+
+        .btn-login:hover {
+            background: #6a3aff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 77, 255, 0.4);
         }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 15px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .login-footer a {
+            color: #7c4dff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .login-footer a:hover {
+            color: #6a3aff;
+            text-decoration: underline;
+        }
+
+        .input-icon {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .input-icon i {
+            position: absolute;
+            top: 50%;
+            left: 12px;
+            transform: translateY(-50%);
+            color: #7c4dff;
+            font-size: 14px;
+        }
+
+        .input-icon input {
+            padding-left: 35px;
+        }
+
         .loading {
             opacity: 0.7;
             pointer-events: none;
+        }
+
+        .book-accent {
+            font-size: 28px;
+            color: #7c4dff;
+        }
+
+        /* Left side branding */
+        .brand-message {
+            position: absolute;
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            z-index: 10;
+            max-width: 40%;
+        }
+
+        .brand-message h1 {
+            font-size: 46px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+
+        .brand-message p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 992px) {
+            .login-container {
+                margin-right: 5%;
+            }
+            .brand-message {
+                display: none;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .background {
+                justify-content: center;
+            }
+            .login-container {
+                margin-right: 0;
+                width: 85%;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <h3 class="mb-4">🔑 Welcome Back</h3>
-    <form id="login-form">
-        <div class="mb-3">
-            <input type="email" class="form-control" id="login-email" placeholder="📧 Enter email" required>
+<div class="background">
+    <div class="overlay"></div>
+
+    <div class="brand-message">
+        <h1>Windsor Bookshop</h1>
+        <p>Discover a world of stories, knowledge, and imagination at your fingertips. Sign in to access your personal bookshelf.</p>
+    </div>
+
+    <div class="login-container">
+        <div class="login-logo">
+            <i class="fas fa-book-open book-accent"></i>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your account</p>
         </div>
-        <div class="mb-3">
-            <input type="password" class="form-control" id="login-password" placeholder="🔒 Enter password" required>
+
+        <form id="login-form">
+            <div class="input-icon">
+                <i class="fas fa-envelope"></i>
+                <input type="email" class="form-control" id="login-email" placeholder="Email address" required>
+            </div>
+
+            <div class="input-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="form-control" id="login-password" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="btn btn-login">
+                Sign In <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <p class="mb-2">
+                <a href="../front/frontEnd/passwordFornget.html">Forgot Password?</a>
+            </p>
+            <p>
+                Need an account? <a href="frontEnd/register.html">Sign Up</a>
+            </p>
         </div>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-    </form>
-    <p class="mt-3">
-        <a href="passwordForget.html" class="text-white fw-bold">Forgot Password?</a>
-    </p>
-    <p class="mt-2">
-        Don't have an account? <a href="frontEnd/register.html" class="text-white fw-bold">Register</a>
-    </p>
+    </div>
 </div>
 
 <script>
@@ -81,7 +243,7 @@
         const password = document.getElementById("login-password").value;
         const loginButton = e.target.querySelector("button");
         loginButton.classList.add("loading");
-        loginButton.innerHTML = "🔄 Logging in...";
+        loginButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Signing in...';
 
         try {
             const response = await fetch(`${API_BASE_URL}/authenticate`, {
@@ -94,7 +256,12 @@
 
             if (response.ok) {
                 if (!result || !result.token || !result.userId || !result.role) {
-                    Swal.fire("⚠️ Error", "Invalid user data received.", "error");
+                    Swal.fire({
+                        title: "Error",
+                        text: "Invalid user data received.",
+                        icon: "error",
+                        confirmButtonColor: "#7c4dff"
+                    });
                     return;
                 }
 
@@ -105,10 +272,11 @@
                 const userRole = result.role.toUpperCase();
 
                 Swal.fire({
-                    title: "🎉 Login Successful!",
-                    text: `Welcome back, ${userRole}!`,
+                    title: "Welcome Back!",
+                    text: `Logged in successfully as ${userRole}`,
                     icon: "success",
-                    confirmButtonText: "Proceed"
+                    confirmButtonColor: "#7c4dff",
+                    confirmButtonText: "Continue"
                 }).then(() => {
                     if (userRole === "ADMIN") {
                         window.location.href = "../front/frontEnd/adminDashboard.html";
@@ -122,10 +290,12 @@
             } else {
                 if (result.message?.toLowerCase().includes("verify")) {
                     Swal.fire({
-                        title: "⚠️ Email Not Verified",
+                        title: "Email Not Verified",
                         text: "Would you like us to resend the verification code?",
                         icon: "warning",
                         showCancelButton: true,
+                        confirmButtonColor: "#7c4dff",
+                        cancelButtonColor: "#d33",
                         confirmButtonText: "Resend Code",
                         cancelButtonText: "Cancel"
                     }).then(async (choice) => {
@@ -135,28 +305,53 @@
                                     method: "POST"
                                 });
                                 if (resendResponse.ok) {
-                                    Swal.fire("📬 Verification Code Sent", "Check your inbox.", "info");
+                                    Swal.fire({
+                                        title: "Verification Code Sent",
+                                        text: "Please check your inbox.",
+                                        icon: "info",
+                                        confirmButtonColor: "#7c4dff"
+                                    });
                                 } else {
-                                    Swal.fire("❌ Failed", "Could not resend verification code.", "error");
+                                    Swal.fire({
+                                        title: "Failed",
+                                        text: "Could not resend verification code.",
+                                        icon: "error",
+                                        confirmButtonColor: "#7c4dff"
+                                    });
                                 }
                             } catch (err) {
                                 console.error(err);
-                                Swal.fire("Error", "Something went wrong. Try again later.", "error");
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "Something went wrong. Try again later.",
+                                    icon: "error",
+                                    confirmButtonColor: "#7c4dff"
+                                });
                             }
                         }
                     });
                 } else {
-                    Swal.fire("Error!", result.message || "Invalid email or password", "error");
+                    Swal.fire({
+                        title: "Login Failed",
+                        text: result.message || "Invalid email or password",
+                        icon: "error",
+                        confirmButtonColor: "#7c4dff"
+                    });
                 }
             }
 
         } catch (error) {
             console.error("Login Error:", error);
-            Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+            Swal.fire({
+                title: "Connection Error",
+                text: "Something went wrong. Please try again.",
+                icon: "error",
+                confirmButtonColor: "#7c4dff"
+            });
         }
 
         loginButton.classList.remove("loading");
-        loginButton.innerHTML = "Login";
+        loginButton.innerHTML = 'Sign In <i class="fas fa-arrow-right ms-2"></i>';
     });
 </script>
 
