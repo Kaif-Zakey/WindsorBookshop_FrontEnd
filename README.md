@@ -103,8 +103,46 @@ java -jar target/windsorbookshop-0.0.1-SNAPSHOT.jar
  The backend API should be accessible at a base URL, typically `http://localhost:8080/api/v1`
 
  ## Demonstration Of the WindsorBookshop You Can Watch here:
- [WindsorBookshop Project](https://youtu.be/xdA5sqPQ2iY)
+ [WindsorBookshop Project video](https://youtu.be/xdA5sqPQ2iY)
+
+
+## ScreenShots Of Windsor Project
+
+### Admin Dashboard
+ ![Dashboard](assets/screenshot/AdminDashboard.png)
+
  
+ ### Customer Dashboard
+ ![Dashboard](assets/screenshot/CustomerDashboard.png)
+
+
+  ### Staff Dashboard
+ ![Dashboard](assets/screenshot/StaffDashboard.png)
+
+
+ ### Cart
+ ![Dashboard](assets/screenshot/Cart.png)
+
+
+### Contact Us 
+ ![Dashboard](assets/screenshot/ContactUs.png)
+
+
+### Customer Review
+ ![Dashboard](assets/screenshot/CustomerReview.png)
+
+
+### Order History
+ ![Dashboard](assets/screenshot/OrderHistory.png)
+
+
+### Order Management
+ ![Dashboard](assets/screenshot/OrderManagement.png)
+ 
+
+ ### User Profile
+ ![Dashboard](assets/screenshot/UserProfile.png)
+
  
  
 
